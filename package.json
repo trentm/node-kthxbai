@@ -1,6 +1,6 @@
 {
   "name": "ayfkm",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "All Your Files Kept Minimal",
   "dependencies": {
     "assert-plus": "*",
