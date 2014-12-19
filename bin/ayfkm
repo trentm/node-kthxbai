@@ -7,12 +7,50 @@ var p = console.log;
 
 var assert = require('assert-plus');
 var dashdash = require('dashdash');
+var format = require('util').format;
+var fs = require('fs');
+var glob = require('glob');
+var path = require('path');
+var rimraf = require('rimraf');
+
 
 
 // ---- globals
 
+var DEFAULT_PATTERNS = [
+    '**/example',
+    '**/examples',
+    '**/test',
+    '**/tests',
+    '**/doc',
+    '**/man',
+    '**/.travis.yml'
+];
+
 
 // ---- internal support stuff
+
+function ayfkm(opts, cb) {
+    assert.string(opts.dir, 'opts.dir');
+
+    var dir = path.resolve(opts.dir);
+    if (! fs.existsSync(dir)) {
+        throw new Error(format('"%s" does not exist', opts.dir));
+    }
+
+    // XXX bail if opts.dir isn't a node_modules
+
+    var patterns = DEFAULT_PATTERNS;
+    for (var i = 0; i < patterns.length; i++) {
+        var pattern = patterns[i];
+        var files = glob.sync(pattern, {cwd: dir});
+        for (var j = 0; j < files.length; j++) {
+            p('rm %s', path.join(opts.dir, files[j]));
+            rimraf.sync(path.join(dir, files[j]));
+        }
+    }
+}
+
 
 
 // ---- mainline
@@ -28,6 +66,11 @@ function main(argv) {
             names: ['help', 'h'],
             type: 'bool',
             help: 'Print this help and exit.'
+        },
+        {
+            names: ['verbose', 'v'],
+            type: 'bool',
+            help: 'Verbose output.'
         }
     ];
 
@@ -54,7 +97,14 @@ function main(argv) {
         process.exit(0);
     }
 
-    p('TODO: this is not yet functional')
+    ayfkm({dir: './node_modules'}, function (err) {
+        if (err) {
+            console.error('ayfkm: error: %s',
+                opts.verbose ? err.stack : err.message);
+            process.exit(1);
+        }
+        process.exit(0);
+    });
 }
 
 
