@@ -1,0 +1,10 @@
+{
+  "name": "ayfkm",
+  "version": "1.0.0",
+  "description": "All Your Files Kept Minimal",
+  "dependencies": {
+    "assert-plus": "*",
+    "dashdash": "~1"
+  },
+  "homepage": "https://github.com/trentm/ayfkm"
+}

@@ -1,0 +1,63 @@
+#!/usr/bin/env node
+/**
+ *
+ */
+
+var p = console.log;
+
+var assert = require('assert-plus');
+var dashdash = require('dashdash');
+
+
+// ---- globals
+
+
+// ---- internal support stuff
+
+
+// ---- mainline
+
+function main(argv) {
+    var options = [
+        {
+            name: 'version',
+            type: 'bool',
+            help: 'Print tool version and exit.'
+        },
+        {
+            names: ['help', 'h'],
+            type: 'bool',
+            help: 'Print this help and exit.'
+        }
+    ];
+
+    var parser = dashdash.createParser({options: options});
+    try {
+        var opts = parser.parse(argv);
+    } catch (e) {
+        console.error('tabula: error: %s', e.message);
+        process.exit(1);
+    }
+
+    if (opts.help) {
+        var help = parser.help({includeEnv: true}).trimRight();
+        p('usage:\n'
+            + '    aykfm [<options>]\n'
+            + '\n'
+            + 'options:\n'
+            + help);
+        process.exit(0);
+    } else if (opts.version) {
+        var pkg = require('../package.json');
+        p('ayfkm ' + pkg.version);
+        p(pkg.homepage);
+        process.exit(0);
+    }
+
+    p('TODO: this is not yet functional')
+}
+
+
+if (require.main === module) {
+    main(process.argv);
+}
