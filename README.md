@@ -9,16 +9,23 @@ then run this:
 
     npm install && ./node_modules/.bin/ayfkm
 
+
+# Status
+
+Not yet functional. Come back later please!
+
+
 # Install
 
     npm install ayfkm
 
 
+# TODO
 
-# XXX
-
-ample Y kill me
-ample Y kill modules
+- basic functionality
+- .ayfkm.json support
+- docs
+- dashdash cruft removal
 
 
 # See Also
