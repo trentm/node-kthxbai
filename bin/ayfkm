@@ -7,6 +7,7 @@ var p = console.log;
 
 var assert = require('assert-plus');
 var dashdash = require('dashdash');
+var du = require('du');
 var format = require('util').format;
 var fs = require('fs');
 var glob = require('glob');
@@ -17,38 +18,164 @@ var rimraf = require('rimraf');
 
 // ---- globals
 
-var DEFAULT_PATTERNS = [
-    '**/example',
-    '**/examples',
-    '**/test',
-    '**/tests',
-    '**/doc',
-    '**/man',
-    '**/.travis.yml'
-];
+var VERBOSE = false;
+var CONFIG_FILE = '.ayfkm';
 
 
 // ---- internal support stuff
 
-function ayfkm(opts, cb) {
-    assert.string(opts.dir, 'opts.dir');
-
-    var dir = path.resolve(opts.dir);
-    if (! fs.existsSync(dir)) {
-        throw new Error(format('"%s" does not exist', opts.dir));
+function _errorCb(err) {
+    if (err) {
+        console.error('ayfkm: error: %s', VERBOSE ? err.stack : err.message);
+        process.exit(1);
     }
+    process.exit(0);
+}
 
-    // XXX bail if opts.dir isn't a node_modules
+function parseConfig(data) {
+    var config = {
+        pragmas: {},
+        patterns: []
+    };
 
-    var patterns = DEFAULT_PATTERNS;
-    for (var i = 0; i < patterns.length; i++) {
-        var pattern = patterns[i];
-        var files = glob.sync(pattern, {cwd: dir});
-        for (var j = 0; j < files.length; j++) {
-            p('rm %s', path.join(opts.dir, files[j]));
-            rimraf.sync(path.join(dir, files[j]));
+    var lines = data.trim().split(/\r?\n/g);
+    for (var i = 0; i < lines.length; i++) {
+        var line = lines[i].trim();
+        if (line.length === 0) {
+            continue;
+        } else if (line[0] === '#') {
+            /**
+             * This could be a pragma:
+             *    # +pragma: PRAGMA1 [PRAGMA2...]
+             * or just a comment.
+             */
+            line = line.slice(1).trim();
+            if (line.slice(0, 8) === '+pragma:') {
+                line.slice(8).trim().split(/\s+/g).forEach(function (p) {
+                    config.pragmas[p] = true;
+                });
+            }
+        } else {
+            config.patterns.push(line);
         }
     }
+
+    return config;
+}
+
+function loadConfigSync(opts) {
+    assert.string(opts.projDir, 'opts.projDir');
+
+    var conf = path.join(opts.projDir, CONFIG_FILE);
+    if (!fs.existsSync(conf)) {
+        throw new Error(format('no "%s" config file (use `ayfkm --init` '
+            + 'to create one or `ayfkm --force` to clean cruft without)',
+            conf));
+    }
+
+    var data = fs.readFileSync(conf, {encoding: 'utf8'});
+    return parseConfig(data);
+}
+
+function findProjDirSync() {
+    // TODO: relative to a given dir when dir arg is supported
+    var dir = process.cwd();
+    while (true) {
+        if (fs.existsSync(path.join(dir, 'package.json'))) {
+            return dir;
+        }
+        var parent = path.dirname(dir);
+        if (parent === dir) {
+            throw new Error(format(
+                'could not find package.json in "%s" or parent dirs', dir));
+        }
+        dir = parent;
+    }
+}
+
+function ayfkmInit(opts, cb) {
+    assert.bool(opts.dryRun, 'opts.dryRun');
+    assert.string(opts.projDir, 'opts.projDir');
+
+    var skel = path.resolve(__dirname, '../skel/ayfkm');
+    var conf = path.join(opts.projDir, CONFIG_FILE);
+    fs.readFile(skel, function (err, data) {
+        if (err) return cb(err);
+
+        if (opts.dryRun) {
+            console.log('[dry-run] "%s" created with default patterns', conf);
+            return cb();
+        }
+
+        fs.writeFile(conf, data, function (err) {
+            if (err) return cb(err);
+            console.log('"%s" created with default patterns', conf);
+            cb();
+        });
+    });
+}
+
+function ayfkm(opts, cb) {
+    assert.bool(opts.dryRun, 'opts.dryRun');
+    assert.string(opts.projDir, 'opts.projDir');
+    assert.bool(opts.verbose, 'opts.verbose');
+
+    var dir = path.resolve(opts.projDir, 'node_modules');
+    var relDir = path.relative(process.cwd(), dir);
+    if (! fs.existsSync(dir)) {
+        throw new Error(format('"%s" does not exist', relDir));
+    }
+
+    var base = path.basename(dir);
+    if (base !== 'node_modules' && path.basename(base) !== 'node_modules') {
+        throw new Error(format('"%s" is not a node_modules dir or subdir',
+            relDir));
+    }
+
+    // Note this the count of bytes underestimates the FS usage because of
+    // block size.
+    du(dir, function (err, startSize) {
+        try {
+            var config = loadConfigSync(opts);
+        } catch (err) {
+            return cb(err);
+        }
+
+        var rmCount = 0;
+        var globOpts = {
+            cwd: dir,
+            cache: {},
+            statCache: {},
+            symlinks: {},
+        }
+        for (var i = 0; i < config.patterns.length; i++) {
+            var pattern = config.patterns[i];
+            var files = glob.sync(pattern, globOpts);
+            for (var j = 0; j < files.length; j++) {
+                rmCount++;
+                var file = path.join(dir, files[j]);
+                if (opts.verbose) {
+                    var relFile = path.join(relDir, files[j]);
+                    p('rm %s', relFile);
+                }
+                if (!opts.dryRun) {
+                    rimraf.sync(path.join(dir, files[j]));
+                }
+            }
+        }
+
+        du(dir, function (err, endSize) {
+            var extra = (opts.dryRun ? ' (dry-run)' : '');
+            p('    %d files/dirs removed under "%s"%s',
+                rmCount, dir, extra);
+            p('    %s bytes -> %s bytes (%d%%)', startSize, endSize,
+                Math.round(100 - 100 * endSize / startSize));
+            cb();
+        });
+
+    });
+
+
 }
 
 
@@ -70,7 +197,19 @@ function main(argv) {
         {
             names: ['verbose', 'v'],
             type: 'bool',
-            help: 'Verbose output.'
+            help: 'Verbose output.',
+            default: false
+        },
+        {
+            names: ['init'],
+            type: 'bool',
+            help: 'Initialize a .ayfkm file.'
+        },
+        {
+            names: ['dry-run', 'n'],
+            type: 'bool',
+            help: 'Do a dry-run.',
+            default: false
         }
     ];
 
@@ -78,8 +217,11 @@ function main(argv) {
     try {
         var opts = parser.parse(argv);
     } catch (e) {
-        console.error('tabula: error: %s', e.message);
+        console.error('ayfkm: error: %s', e.message);
         process.exit(1);
+    }
+    if (opts.verbose) {
+        VERBOSE = opts.verbose;
     }
 
     if (opts.help) {
@@ -95,16 +237,19 @@ function main(argv) {
         p('ayfkm ' + pkg.version);
         p(pkg.homepage);
         process.exit(0);
+    } else if (opts.init) {
+        ayfkmInit({
+            dryRun: opts.dry_run,
+            verbose: opts.verbose,
+            projDir: findProjDirSync(),
+        }, _errorCb);
+    } else {
+        ayfkm({
+            dryRun: opts.dry_run,
+            verbose: opts.verbose,
+            projDir: findProjDirSync(),
+        }, _errorCb);
     }
-
-    ayfkm({dir: './node_modules'}, function (err) {
-        if (err) {
-            console.error('ayfkm: error: %s',
-                opts.verbose ? err.stack : err.message);
-            process.exit(1);
-        }
-        process.exit(0);
-    });
 }
 
 

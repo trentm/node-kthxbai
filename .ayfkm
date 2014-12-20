@@ -1,0 +1,23 @@
+# Default cruft patterns.
+**/example
+**/examples
+**/test
+**/tests
+**/doc
+**/man
+**/.travis.yml
+
+# Custom patterns
+**/AUTHORS
+**/LICENSE
+**/README*
+**/.npmignore
+**/.gitmodules
+**/.jshintrc
+.bin
+
+# dashdash current rev has cruft
+dashdash/tools
+dashdash/TODO.txt
+dashdash/CHANGES.md
+dashdash/Makefile

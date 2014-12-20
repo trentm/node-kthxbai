@@ -1,10 +1,11 @@
 {
   "name": "ayfkm",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "All Your Files Kept Minimal",
   "dependencies": {
-    "assert-plus": "*",
+    "assert-plus": "~0",
     "dashdash": "~1",
+    "du": "~0",
     "glob": "~4",
     "rimraf": "~2"
   },

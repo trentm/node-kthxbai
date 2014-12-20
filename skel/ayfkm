@@ -1,0 +1,10 @@
+# Default cruft patterns.
+**/example
+**/examples
+**/test
+**/tests
+**/doc
+**/man
+**/.travis.yml
+
+# Custom patterns.
