@@ -5,9 +5,8 @@
   "dependencies": {
     "assert-plus": "*",
     "dashdash": "~1",
-    "findit": "^2.0.0",
-    "glob": "^4.3.2",
-    "rimraf": "^2.2.8"
+    "glob": "~4",
+    "rimraf": "~2"
   },
   "homepage": "https://github.com/trentm/ayfkm"
 }
