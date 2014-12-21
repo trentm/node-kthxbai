@@ -45,9 +45,9 @@ Here is an example run (use `-v,--verbose` to list every file being removed):
 As long as you only want/need the default cruft patterns, then you can clean
 cruft without a config file with:
 
-    ayfkm -f             # or `ayfkm --force`
+    ayfkm --force
 
-There are a couple reasons `-f,--force` or a config file is required:
+There are a couple reasons `--force` or a config file is required:
 
 1. The default `ayfkm` behaviour is to delete files. That's dangerous and
    invasive. Requiring the config file is an "opt-in".
@@ -87,7 +87,6 @@ sections.
 
 # TODO
 
-- -f,--force
 - 'rm-self' pragma
 - XXXs in docs
 - support dir handling:

@@ -22,6 +22,7 @@ var VERBOSE = false;
 var CONFIG_FILE = '.ayfkm';
 
 
+
 // ---- internal support stuff
 
 function _errorCb(err) {
@@ -65,15 +66,20 @@ function parseConfig(data) {
 
 function loadConfigSync(opts) {
     assert.string(opts.projDir, 'opts.projDir');
+    assert.bool(opts.force, 'opts.force');
 
-    var conf = path.join(opts.projDir, CONFIG_FILE);
-    if (!fs.existsSync(conf)) {
-        throw new Error(format('no "%s" config file (use `ayfkm --init` '
-            + 'to create one or `ayfkm --force` to clean cruft without)',
-            conf));
+    var confPath = path.join(opts.projDir, CONFIG_FILE);
+    if (!fs.existsSync(confPath)) {
+        if (opts.force) {
+            confPath = path.resolve(__dirname, '../skel/ayfkm');
+        } else {
+            throw new Error(format('no "%s" config file (use `ayfkm --init` '
+                + 'to create one or `ayfkm --force` to clean cruft without)',
+                confPath));
+        }
     }
 
-    var data = fs.readFileSync(conf, {encoding: 'utf8'});
+    var data = fs.readFileSync(confPath, {encoding: 'utf8'});
     return parseConfig(data);
 }
 
@@ -116,9 +122,10 @@ function ayfkmInit(opts, cb) {
 }
 
 function ayfkm(opts, cb) {
-    assert.bool(opts.dryRun, 'opts.dryRun');
     assert.string(opts.projDir, 'opts.projDir');
+    assert.bool(opts.dryRun, 'opts.dryRun');
     assert.bool(opts.verbose, 'opts.verbose');
+    assert.bool(opts.force, 'opts.force');
 
     var dir = path.resolve(opts.projDir, 'node_modules');
     var relDir = path.relative(process.cwd(), dir);
@@ -136,7 +143,7 @@ function ayfkm(opts, cb) {
     // block size.
     du(dir, function (err, startSize) {
         try {
-            var config = loadConfigSync(opts);
+            config = loadConfigSync(opts);
         } catch (err) {
             return cb(err);
         }
@@ -201,14 +208,20 @@ function main(argv) {
             default: false
         },
         {
+            names: ['dry-run', 'n'],
+            type: 'bool',
+            help: 'Do a dry-run.',
+            default: false
+        },
+        {
             names: ['init'],
             type: 'bool',
             help: 'Initialize a .ayfkm file.'
         },
         {
-            names: ['dry-run', 'n'],
+            names: ['force'],
             type: 'bool',
-            help: 'Do a dry-run.',
+            help: 'Allow cruft clean up without a ".ayfkm" config file.',
             default: false
         }
     ];
@@ -246,6 +259,7 @@ function main(argv) {
     } else {
         ayfkm({
             dryRun: opts.dry_run,
+            force: opts.force,
             verbose: opts.verbose,
             projDir: findProjDirSync(),
         }, _errorCb);
