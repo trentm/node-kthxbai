@@ -1,13 +1,25 @@
 {
   "name": "ayfkm",
   "version": "0.2.0",
-  "description": "All Your Files Kept Minimal",
+  "description": "All Your Files Kept Minimal -- trim files from node_modules not needed for running",
+  "author": "Trent Mick <trentm@gmail.com> (http://trentm.com)",
+  "bin": {
+    "ayfkm": "./bin/ayfkm"
+  },
+
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/trentm/ayfkm.git"
+  },
+  "engines": ["node >=0.10.0"],
+  "keywords": ["minimal", "install"],
+  "homepage": "https://github.com/trentm/ayfkm",
+
   "dependencies": {
     "assert-plus": "~0",
     "dashdash": "~1",
     "du": "~0",
     "glob": "~4",
     "rimraf": "~2"
-  },
-  "homepage": "https://github.com/trentm/ayfkm"
+  }
 }

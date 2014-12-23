@@ -1,3 +1,5 @@
+# All Your Files Kept Minimal config file (https://github.com/trentm/ayfkm)
+
 # Default cruft patterns.
 **/example
 **/examples

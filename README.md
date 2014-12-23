@@ -84,6 +84,11 @@ XXX
 TODO: Doc the best practice of blank-line-separated and comment-preceded
 sections.
 
+## Pragmas
+
+- `rm-self`: Will result a locally installed "ayfkm" node module being removed
+  when `ayfkm` is run.
+
 
 # TODO
 
@@ -96,7 +101,7 @@ sections.
     ayfkm foo    # -> $projDir/node_modules/foo
 - dashdash cruft removal
 - discussion of that ticket and my view... near the top. I don't want the name
-  to misrepresent my opinion
+  to misrepresent my opinion. See potential rename below.
 - patterns/ dir with docs on how to PR to add more:
         patterns/re/restify@2   <--- or something usable with semver there
   (make sure to exclude this dir in .npmignore!)
@@ -104,10 +109,16 @@ sections.
         ayfkm --import [<package-name> ...]
         ayfkm --import    # for every package name in package.json#dependencies
         ayfkm --import foo bar
+
+
+Someday/Maybe:
+
 - add more defaults from my imgadm Makefile?
 - pragma aggressive: README.md, drop npm server-added fields to package.json,
   license files okay?
 - remove dirs made empty
+- rename to be less aggressive?:
+    kthxbai? kill those huge eXtra bits and ills
 
 
 # See Also

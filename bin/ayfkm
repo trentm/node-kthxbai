@@ -121,6 +121,7 @@ function ayfkmInit(opts, cb) {
     });
 }
 
+
 function ayfkm(opts, cb) {
     assert.string(opts.projDir, 'opts.projDir');
     assert.bool(opts.dryRun, 'opts.dryRun');
@@ -146,6 +147,12 @@ function ayfkm(opts, cb) {
             config = loadConfigSync(opts);
         } catch (err) {
             return cb(err);
+        }
+
+        var patterns = config.patterns;
+        if (config.pragmas['rm-self']) {
+            patterns.push('.bin/ayfkm');
+            patterns.push('ayfkm');
         }
 
         var rmCount = 0;
@@ -179,10 +186,7 @@ function ayfkm(opts, cb) {
                 Math.round(100 - 100 * endSize / startSize));
             cb();
         });
-
     });
-
-
 }
 
 
