@@ -1,6 +1,6 @@
-# All Your Files Kept Minimal config file (https://github.com/trentm/ayfkm)
+# kthxbai config file (https://github.com/trentm/node-kthxbai)
 
-# Default cruft patterns.
+# Default patterns
 **/example
 **/examples
 **/test
@@ -18,7 +18,7 @@
 **/.jshintrc
 .bin
 
-# dashdash current rev has cruft
+# dashdash 1.7.1 has unnecessary bits
 dashdash/tools
 dashdash/TODO.txt
 dashdash/CHANGES.md

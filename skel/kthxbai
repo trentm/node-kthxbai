@@ -1,0 +1,12 @@
+# kthxbai config file (https://github.com/trentm/node-kthxbai)
+
+# Default patterns
+**/example
+**/examples
+**/test
+**/tests
+**/doc
+**/man
+**/.travis.yml
+
+# Custom patterns

@@ -1,19 +1,19 @@
 {
-  "name": "ayfkm",
-  "version": "0.2.0",
-  "description": "All Your Files Kept Minimal -- trim files from node_modules not needed for running",
+  "name": "kthxbai",
+  "version": "0.3.0",
+  "description": "Kill Those Huge eXtra Bits Absentmindedly Installed -- trim files from node_modules not needed for running",
   "author": "Trent Mick <trentm@gmail.com> (http://trentm.com)",
   "bin": {
-    "ayfkm": "./bin/ayfkm"
+    "kthxbai": "./bin/kthxbai"
   },
 
   "repository": {
     "type": "git",
-    "url": "git://github.com/trentm/ayfkm.git"
+    "url": "git://github.com/trentm/node-kthxbai.git"
   },
   "engines": ["node >=0.10.0"],
-  "keywords": ["minimal", "install"],
-  "homepage": "https://github.com/trentm/ayfkm",
+  "keywords": ["minimal", "install", "small"],
+  "homepage": "https://github.com/trentm/node-kthxbai",
 
   "dependencies": {
     "assert-plus": "~0",

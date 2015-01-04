@@ -1,9 +1,9 @@
-*All Your Files Kept Minimal.*
+kthxbai (*Kill Those Huge eXtra Bits Absentmindedly Installed*)
 
-Run `ayfkm` after `npm install` to trim out cruft. Here "cruft" means any
-files that aren't required for *running* your node module dependencies.
-Default (hopefully reasonable) cruft patterns are included. Customize
-with a ".ayfkm" file in your repo.
+Run `kthxbai` after `npm install` to trim out parts of "node\_modules/..."
+that aren't required for *running* your node.js dependencies.  Default
+(hopefully reasonable) file patterns are included. Customize with a ".kthxbai"
+file in your repo.
 
 # Status
 
@@ -13,71 +13,73 @@ Come back later please!
 
 # Install
 
-    npm install -g ayfkm
+    npm install -g kthxbai
 
 See below if installing globally isn't your thing.
 
 
 # Usage
 
-First, create a ".ayfkm" config file for your project as follows.  This will
-include the [default cruft patterns](./skel/ayfkm) (patterns use
+First, create a ".kthxbai" config file for your project as follows.  This will
+include the [default file patterns](./skel/kthxbai) (patterns use
 [glob](https://www.npmjs.com/package/glob) syntax and are implicitly for paths
 under "./node\_modules").
 
-    ayfkm --init
+    kthxbai --init
 
-Then you can clean out the cruft with:
+Then you can then trim "./node\_modules" with:
 
-    ayfkm
+    kthxbai
 
-Here is an example run (use `-v,--verbose` to list every file being removed):
+Here is an example run (use `-v` or `--verbose` to list every file being
+removed):
 
-    $ ayfkm --init
-    "/Users/trentm/tm/node-bunyan/.ayfkm" created with default patterns
-    $ ayfkm
+    $ kthxbai --init
+    "/Users/trentm/tm/node-bunyan/.kthxbai" created with default patterns
+    $ kthxbai
         75 files/dirs removed under "/Users/trentm/tm/node-bunyan/node_modules"
         3209616 bytes -> 2496922 bytes (22%)
 
 
-## I don't want a '.ayfkm' file in my project
+## I don't want a '.kthxbai' file in my project
 
-As long as you only want/need the default cruft patterns, then you can clean
-cruft without a config file with:
+As long as you only want/need the default file patterns, then you can trim
+node\_modules without a config file with:
 
-    ayfkm --force
+    kthxbai --force
 
 There are a couple reasons `--force` or a config file is required:
 
-1. The default `ayfkm` behaviour is to delete files. That's dangerous and
+1. The default `kthxbai` behaviour is to delete files. That's dangerous and
    invasive. Requiring the config file is an "opt-in".
-2. Creating a config file allows the default cruft patterns to be explicitly
-   listed. Explicit is good and it also makes adding extra cruft patterns
+2. Creating a config file allows the default file patterns to be explicitly
+   listed. Explicit is good and it also makes adding extra patterns
    clearer.
 
 
-## I don't want to install `ayfkm` globally
+## I don't want to install `kthxbai` globally
 
 `npm install -g ...` might not be your thing. However adding a dependency on
-`ayfkm` when the point is to reduce the size of your deps is ironic. The
+`kthxbai` when the point is to reduce the size of your deps is ironic. The
 answer is
 [devDependencies](https://docs.npmjs.com/files/package.json#devdependencies)
-and, optionally, the `rm-self` ayfkm pragma.
+and, optionally, the `rm-self` kthxbai pragma.
 
-Put this in your "package.json":
+Put this in your "package.json" (manually or by running 
+`npm install --save kthxbai`):
 
     ...
     "devDependencies": {
-        "ayfkm": "*"
+        "kthxbai": "*"
     },
     ...
 
-and this somewhere in your ".ayfkm":
+and this somewhere in your ".kthxbai":
 
     # +pragma: rm-self
 
 
-# ".ayfkm" config file syntax
+# ".kthxbai" config file syntax
 
 XXX
 
@@ -86,39 +88,42 @@ sections.
 
 ## Pragmas
 
-- `rm-self`: Will result a locally installed "ayfkm" node module being removed
-  when `ayfkm` is run.
+- `rm-self`: Will result a locally installed "kthxbai" node module being removed
+  when `kthxbai` is run.
 
 
 # TODO
 
-- 'rm-self' pragma
+- release as kthxbai with renamings
+- s/--force/-y/ and have it prompt
 - XXXs in docs
 - support dir handling:
-    ayfkm  # $projDir/node_modules/
-    ayfkm . # Error out if not a "node_modules" dir or subdir
-    ayfkm ./path/to/foo   # same error out
-    ayfkm foo    # -> $projDir/node_modules/foo
+    kthxbai  # $projDir/node_modules/
+    kthxbai . # Error out if not a "node_modules" dir or subdir
+    kthxbai ./path/to/foo   # same error out
+    kthxbai foo    # -> $projDir/node_modules/foo
 - dashdash cruft removal
 - discussion of that ticket and my view... near the top. I don't want the name
-  to misrepresent my opinion. See potential rename below.
+  to misrepresent my opinion.
+    https://github.com/npm/npm/issues/5264
 - patterns/ dir with docs on how to PR to add more:
         patterns/re/restify@2   <--- or something usable with semver there
   (make sure to exclude this dir in .npmignore!)
   And 'import' support:
-        ayfkm --import [<package-name> ...]
-        ayfkm --import    # for every package name in package.json#dependencies
-        ayfkm --import foo bar
+        kthxbai --import [<package-name> ...]
+        kthxbai --import    # for every package name in package.json#dependencies
+        kthxbai --import foo bar
 
 
 Someday/Maybe:
 
+- pragma: scrub-package.json  to remove npm server-added fields in package.json
+  files
 - add more defaults from my imgadm Makefile?
-- pragma aggressive: README.md, drop npm server-added fields to package.json,
-  license files okay?
+- pragma aggressive: README.md, license files okay?, 
+- what about reducing to a single file? e.g. bunyan to just
+  "node\_modules/bunyan.js"
 - remove dirs made empty
-- rename to be less aggressive?:
-    kthxbai? kill those huge eXtra bits and ills
 
 
 # See Also
