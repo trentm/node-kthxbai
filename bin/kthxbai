@@ -106,7 +106,8 @@ function kthxbaiInit(opts, cb) {
     var skel = path.resolve(__dirname, '../skel/kthxbai');
     var conf = path.join(opts.projDir, CONFIG_FILE);
     fs.readFile(skel, function (err, data) {
-        if (err) return cb(err);
+        if (err)
+            return cb(err);
 
         if (opts.dryRun) {
             console.log('[dry-run] "%s" created with default patterns', conf);
@@ -114,7 +115,8 @@ function kthxbaiInit(opts, cb) {
         }
 
         fs.writeFile(conf, data, function (err) {
-            if (err) return cb(err);
+            if (err)
+                return cb(err);
             console.log('"%s" created with default patterns', conf);
             cb();
         });

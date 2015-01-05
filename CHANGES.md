@@ -2,7 +2,9 @@
 
 ## 0.3.1
 
-(nothing yet)
+- A number more default patterns.
+- Patterns for: semver, dashdash, cmdln
+- `make check`, `make cutarelease`
 
 ## 0.3.0
 

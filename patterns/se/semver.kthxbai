@@ -1,0 +1,8 @@
+# semver (leaving only what is needed for node.js module usage)
+**/semver/{foot,head}.js
+**/semver/semver.min.js
+**/semver/semver.min.js.gz
+**/semver/semver.browser.js
+**/semver/semver.browser.js.gz
+**/semver/bin
+**/.bin/semver

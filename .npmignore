@@ -2,3 +2,7 @@
 /node_modules
 /npm-debug.log
 /packages
+/tools
+/Makefile
+/.gitignore
+/.npmignore

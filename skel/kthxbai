@@ -1,11 +1,22 @@
 # kthxbai config file (https://github.com/trentm/node-kthxbai)
 
 # Default patterns
+**/AUTHORS
+**/CONTRIBUTORS
+**/README*
+**/Readme*
+**/readme*
+**/TODO*
+**/CHANGES.md
+**/History.md
 **/example
 **/examples
+**/samples
 **/test
 **/tests
+**/tst
 **/doc
+**/docs
 **/man
 **/.travis.yml
 
