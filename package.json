@@ -1,6 +1,6 @@
 {
   "name": "kthxbai",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Kill Those Huge eXtra Bits Absentmindedly Installed -- trim files from node_modules not needed for running",
   "author": "Trent Mick <trentm@gmail.com> (http://trentm.com)",
   "bin": {
