@@ -180,10 +180,46 @@ function kthxbai(opts, cb) {
             }
         }
 
+        var scrubCount = 0;
+        if (config.pragmas['scrub-package-json']) {
+            // Trying to limit to server-added fields, but could consider
+            // stripping down to bare minimum for running.
+            var scrubFields = ['readme', '_id', '_shasum', '_from',
+                '_resolved', 'readmeFilename', 'bugs'];
+            var files = glob.sync('**/package.json', globOpts);
+            for (var i = 0; i < files.length; i++) {
+                var file = path.join(dir, files[i]);
+                var content = fs.readFileSync(file, {encoding: 'utf8'});
+                try {
+                    var packageJson = JSON.parse(content);
+                } catch (e) {
+                    p('warning: cannot parse "%s"', file);
+                    continue;
+                }
+                scrubFields.forEach(function (field) {
+                    delete packageJson[field];
+                });
+                var newContent = JSON.stringify(packageJson, null, 2);
+                if (content !== newContent) {
+                    if (opts.verbose) {
+                        var relFile = path.join(relDir, file);
+                        p('scrub %s', relFile);
+                    }
+                    fs.writeFileSync(file, newContent, {encoding: 'utf8'});
+                    scrubCount++;
+                }
+            }
+        }
+
         du(dir, function (err, endSize) {
             var extra = (opts.dryRun ? ' (dry-run)' : '');
-            p('    %d files/dirs removed under "%s"%s',
-                rmCount, dir, extra);
+            if (scrubCount) {
+                p('    %d package.json file%s scrubbed under "%s"%s',
+                    scrubCount, scrubCount === 1 ? '' : 's', dir, extra);
+            }
+            p('    %d file%s/dir%s removed under "%s"%s',
+                rmCount, rmCount === 1 ? '' : 's', rmCount === 1 ? '' : 's',
+                dir, extra);
             p('    %s bytes -> %s bytes (%d%%)', startSize, endSize,
                 Math.round(100 - 100 * endSize / startSize));
             cb();

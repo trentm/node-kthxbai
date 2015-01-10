@@ -65,7 +65,7 @@ answer is
 [devDependencies](https://docs.npmjs.com/files/package.json#devdependencies)
 and, optionally, the `rm-self` kthxbai pragma.
 
-Put this in your "package.json" (manually or by running 
+Put this in your "package.json" (manually or by running
 `npm install --save kthxbai`):
 
     ...
@@ -88,15 +88,25 @@ sections.
 
 ## Pragmas
 
+Pragmas are optional special comments in ".kthxbai" files with this form:
+
+    # +pragma: PRAGMA1 [PRAGMA2...]
+
+For example:
+
+    # +pragma: rm-self
+
+Supported pragmas:
+
 - `rm-self`: Will result a locally installed "kthxbai" node module being removed
   when `kthxbai` is run.
+- `scrub-package-json`: Remove npm server-added fields to package.json files.
 
 
 # TODO
 
-- release as kthxbai with renamings
 - s/--force/-y/ and have it prompt
-- XXXs in docs
+- XXXs and TODOs in docs
 - support dir handling:
     kthxbai  # $projDir/node_modules/
     kthxbai . # Error out if not a "node_modules" dir or subdir
@@ -117,10 +127,9 @@ sections.
 
 Someday/Maybe:
 
-- pragma: scrub-package.json  to remove npm server-added fields in package.json
-  files
+- pragma scrub-npm-shrinkwrap to make successive runs not be undiffable
 - add more defaults from my imgadm Makefile?
-- pragma aggressive: README.md, license files okay?, 
+- pragma aggressive: README.md, license files okay?,
 - what about reducing to a single file? e.g. bunyan to just
   "node\_modules/bunyan.js"
 - remove dirs made empty
