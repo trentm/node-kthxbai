@@ -282,7 +282,7 @@ function main(argv) {
     if (opts.help) {
         var help = parser.help({includeEnv: true}).trimRight();
         p('usage:\n'
-            + '    aykfm [<options>]\n'
+            + '    kthxbai [<options>]\n'
             + '\n'
             + 'options:\n'
             + help);

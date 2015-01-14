@@ -127,7 +127,6 @@ Supported pragmas:
 
 Someday/Maybe:
 
-- pragma scrub-npm-shrinkwrap to make successive runs not be undiffable
 - add more defaults from my imgadm Makefile?
 - pragma aggressive: README.md, license files okay?,
 - what about reducing to a single file? e.g. bunyan to just
