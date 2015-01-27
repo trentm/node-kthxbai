@@ -1,5 +1,10 @@
 # node-kthxbai Changelog
 
+## 0.4.1 (not yet released)
+
+(nothing yet)
+
+
 ## 0.4.0
 
 - `pragma: scrub-package-json`
