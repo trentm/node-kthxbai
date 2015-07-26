@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 /**
+ * Copyright (c) 2015 Trent Mick. All rights reserved.
  *
+ * Kill Those Huge eXtra Bits Absentmindedly Installed -- trim files from
+ * node_modules not needed for running
+ *
+ * See <https://github.com/trentm/node-kthxbai>.
  */
 
 var p = console.log;
